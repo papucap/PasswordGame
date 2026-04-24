@@ -1,17 +1,16 @@
-import React from 'react';
-
 interface PasswordInputProps {
+    password: string;
     setPassword: (value: string) => void;
 }
 
-const PasswordInput: React.FC<PasswordInputProps> = ({ setPassword }) => {
+const PasswordInput: React.FC<PasswordInputProps> = ({ password, setPassword }) => {
     return (
-        <div style={{ margin: '10px 0' }}>
-            <label htmlFor="password">Zadejte heslo: </label>
+        <div className="mb-3">
+            <label className="form-label">Zadejte heslo:</label>
             <input
-                id="password"
                 type="password"
-                placeholder="Vaše heslo"
+                className="form-control"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
             />
         </div>

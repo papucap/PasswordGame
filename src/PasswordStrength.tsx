@@ -17,10 +17,10 @@ const PasswordStrength: React.FC<PasswordStrengthProps> = ({ password }) => {
     const strengthScore = criteria.filter((c) => c.met).length;
 
     const getStrengthData = () => {
-        if (password.length === 0) return { label: 'Zadejte heslo', color: '#e0e0e0', width: '0%' };
-        if (strengthScore <= 1) return { label: 'Slabé', color: '#ff4d4d', width: '33%' };
-        if (strengthScore <= 3) return { label: 'Střední', color: '#ffa500', width: '66%' };
-        return { label: 'Silné', color: '#2ecc71', width: '100%' };
+        if (password.length === 0) return { label: 'Zadejte heslo', color: 'var(--border-color)', width: '0%' };
+        if (strengthScore <= 1) return { label: 'Slabé', color: 'var(--strength-weak)', width: '33%' };
+        if (strengthScore <= 3) return { label: 'Střední', color: 'var(--strength-medium)', width: '66%' };
+        return { label: 'Silné', color: 'var(--strength-strong)', width: '100%' };
     };
 
     const strength = getStrengthData();
