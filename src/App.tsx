@@ -1,56 +1,49 @@
-import { useState } from "react";
-import "./App.css";
+import { useState } from 'react';
+import './App.css';
 
-import PasswordInput from "./PasswordInput";
-import PasswordStrength from "./PasswordStrength";
-import CharacterSequenceValidator, { ValidationResult } from "./CharacterSequenceValidator";
-import PasswordTimeValidator from "./PasswordTimeValidator";
+import PasswordInput from './PasswordInput';
+import PasswordStrength from './PasswordStrength';
+import CharacterSequenceValidator, { type ValidationResult } from './CharacterSequenceValidator';
+import PasswordTimeValidator from './PasswordTimeValidator';
 
 export default function App() {
-    const [password, setPassword] = useState("");
+    const [password, setPassword] = useState('');
     const [createdAt, setCreatedAt] = useState<number | null>(null);
     const [sequenceResult, setSequenceResult] = useState<ValidationResult | null>(null);
 
     const handlePasswordChange = (value: string) => {
-        if (!createdAt && value.length > 0) {
-            setCreatedAt(Date.now());
-        }
-
-        if (value === "") {
-            setCreatedAt(null);
-        }
-
+        if (!createdAt && value.length > 0) setCreatedAt(Date.now());
+        if (value === '') setCreatedAt(null);
         setPassword(value);
     };
 
+    const isStrong = sequenceResult?.isValid && password.length >= 8;
+
     return (
-        <div className="container d-flex justify-content-center align-items-center vh-100">
-            <div className="card p-4 shadow custom-card" style={{ width: "400px" }}>
+        <div className="pc-bg">
+            <div className="pc-card">
 
-                <h3 className="text-center mb-4">Password Checker</h3>
+                {/* Hlavička */}
+                <div className="pc-header">
+                    <h1>Pass<span>Check</span></h1>
+                    <p className="pc-subtitle">// analyzer síly hesla</p>
+                </div>
 
-                {/* INPUT KOMPONENTA */}
-                <PasswordInput
-                    password={password}
-                    setPassword={handlePasswordChange}
-                />
+                {/* Input */}
+                <PasswordInput password={password} setPassword={handlePasswordChange} />
 
-                {/* STRENGTH KOMPONENTA */}
+                {/* Síla hesla + kritéria */}
                 <PasswordStrength password={password} />
 
-                {/* SEKVENČNÍ VALIDÁTOR */}
+                <hr className="pc-divider" />
+
+                {/* Sekvence znaků */}
                 <CharacterSequenceValidator
                     password={password}
                     onValidate={setSequenceResult}
                 />
 
-                {sequenceResult && (
-                    <div className={`alert mt-2 ${sequenceResult.isValid ? "alert-success" : "alert-danger"}`}>
-                        Sekvence: {sequenceResult.sequenceCount} → {sequenceResult.isValid ? "OK" : "Chybí"}
-                    </div>
-                )}
-
-                {/* ČASOVÝ VALIDÁTOR */}
+                {/* Časová validace – zobrazí se jakmile uživatel začne psát */}
                 {createdAt && (
                     <PasswordTimeValidator
                         password={password}
@@ -58,9 +51,11 @@ export default function App() {
                     />
                 )}
 
-                <button className="btn btn-primary-custom w-100 mt-3">
-                    Ověřit heslo
+                {/* Tlačítko */}
+                <button className="pc-btn" disabled={!isStrong}>
+                    {isStrong ? '✓ Heslo je v pořádku' : 'Ověřit heslo'}
                 </button>
+
             </div>
         </div>
     );
