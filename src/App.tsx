@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import PasswordInput from './components/PasswordInput/PasswordInput'
 import PasswordStrength from './components/PasswordStrength/PasswordStrength'
-import CharacterSequenceValidator from './components/CharacterSequenceValidator'
-import PasswordTimeValidator from './components/PasswordTimeValidator'
-import CountryFlagValidator from './components/CountryFlagValidator'
+import CharacterSequenceValidator from './components/Validators/CharacterSequenceValidator'
+import PasswordTimeValidator from './components/Validators/PasswordTimeValidator'
+import CountryFlagValidator from './components/Validators/CountryFlagValidator'
 import './App.css'
 
 function App() {
