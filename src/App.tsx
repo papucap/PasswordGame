@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import PasswordInput from './components/PasswordInput'
-import PasswordStrength from './components/PasswordStrength'
+import PasswordInput from './components/PasswordInput/PasswordInput'
+import PasswordStrength from './components/PasswordStrength/PasswordStrength'
 import CharacterSequenceValidator from './components/CharacterSequenceValidator'
 import PasswordTimeValidator from './components/PasswordTimeValidator'
 import CountryFlagValidator from './components/CountryFlagValidator'
