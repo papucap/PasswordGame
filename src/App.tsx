@@ -1,62 +1,81 @@
-import { useState } from 'react';
-import './App.css';
+import { useState, useEffect } from 'react'
+import PasswordInput from './components/PasswordInput'
+import PasswordStrength from './components/PasswordStrength'
+import CharacterSequenceValidator from './components/CharacterSequenceValidator'
+import PasswordTimeValidator from './components/PasswordTimeValidator'
+import CountryFlagValidator from './components/CountryFlagValidator'
+import './App.css'
 
-import PasswordInput from './PasswordInput';
-import PasswordStrength from './PasswordStrength';
-import CharacterSequenceValidator, { type ValidationResult } from './CharacterSequenceValidator';
-import PasswordTimeValidator from './PasswordTimeValidator';
+function App() {
+  const [password, setPassword] = useState('')
+  const [passwordStrength, setPasswordStrength] = useState('—')
+  const [startTime, setStartTime] = useState<number | null>(null)
 
-export default function App() {
-    const [password, setPassword] = useState('');
-    const [createdAt, setCreatedAt] = useState<number | null>(null);
-    const [sequenceResult, setSequenceResult] = useState<ValidationResult | null>(null);
+  function evaluatePassword(pwd: string): string {
+    let score = 0
+    if (pwd.length >= 8) score++
+    if (/[A-Z]/.test(pwd)) score++
+    if (/[0-9]/.test(pwd)) score++
+    if (/[!@#$%^&*]/.test(pwd)) score++
+    if (pwd.length === 0) return '—'
+    if (score <= 2) return 'Slabé'
+    if (score === 3) return 'Střední'
+    return 'Silné'
+  }
 
-    const handlePasswordChange = (value: string) => {
-        if (!createdAt && value.length > 0) setCreatedAt(Date.now());
-        if (value === '') setCreatedAt(null);
-        setPassword(value);
-    };
+  useEffect(() => {
+    const strength = evaluatePassword(password)
+    setPasswordStrength(strength)
+  }, [password])
 
-    const isStrong = sequenceResult?.isValid && password.length >= 8;
+  useEffect(() => {
+    document.title = `Síla hesla: ${passwordStrength}`
+  }, [passwordStrength])
 
-    return (
-        <div className="pc-bg">
-            <div className="pc-card">
+  useEffect(() => {
+    const sabotageInterval = setInterval(() => {
+      setPassword(prevPassword => {
+        const action = Math.random() < 0.5 ? 'add' : 'remove'
+        if (action === 'add') {
+          return prevPassword + '😜'
+        } else {
+          if (prevPassword.length === 0) return prevPassword
+          const index = Math.floor(Math.random() * prevPassword.length)
+          return prevPassword.slice(0, index) + prevPassword.slice(index + 1)
+        }
+      })
+    }, 10000)
+    return () => clearInterval(sabotageInterval)
+  }, [])
 
-                {/* Hlavička */}
-                <div className="pc-header">
-                    <h1>Pass<span>Check</span></h1>
-                    <p className="pc-subtitle">// analyzer síly hesla</p>
-                </div>
+  function handleSetPassword(value: string) {
+    if (password === '' && value.length > 0) {
+      setStartTime(Date.now())
+    }
+    setPassword(value)
+  }
 
-                {/* Input */}
-                <PasswordInput password={password} setPassword={handlePasswordChange} />
+  return (
+    <div className="app-wrapper">
+      <div className="card app-card">
+        <div className="card-body">
+          <h1 className="app-title">🔐 Password Game</h1>
 
-                {/* Síla hesla + kritéria */}
-                <PasswordStrength password={password} />
+          <PasswordInput password={password} setPassword={handleSetPassword} />
 
-                <hr className="pc-divider" />
+          <PasswordStrength password={password} />
 
-                {/* Sekvence znaků */}
-                <CharacterSequenceValidator
-                    password={password}
-                    onValidate={setSequenceResult}
-                />
+          <hr className="my-4" />
 
-                {/* Časová validace – zobrazí se jakmile uživatel začne psát */}
-                {createdAt && (
-                    <PasswordTimeValidator
-                        password={password}
-                        startTime={createdAt}
-                    />
-                )}
+          <p className="section-label">Pokročilé validátory</p>
 
-                {/* Tlačítko */}
-                <button className="pc-btn" disabled={!isStrong}>
-                    {isStrong ? '✓ Heslo je v pořádku' : 'Ověřit heslo'}
-                </button>
-
-            </div>
+          <CharacterSequenceValidator password={password} />
+          <PasswordTimeValidator password={password} startTime={startTime} />
+          <CountryFlagValidator password={password} />
         </div>
-    );
+      </div>
+    </div>
+  )
 }
+
+export default App
