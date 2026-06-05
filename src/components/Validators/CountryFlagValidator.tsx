@@ -37,15 +37,14 @@ function CountryFlagValidator({ password }: Props) {
             onError={() => setImgError(true)}
           />
         )}
-        <span>Heslo musí obsahovat zkratku: <strong>{selectedCountry}</strong></span>
         <span className={isValid ? 'badge-ok' : 'badge-fail'}>
           {isValid ? 'Splněno' : 'Nesplněno'}
         </span>
       </div>
       <div className="validator-detail">
         {isValid
-          ? `✅ Zkratka ${selectedCountry} nalezena v hesle`
-          : `Heslo neobsahuje zkratku země: ${selectedCountry}`}
+          ? `✅ Zkratka nalezena v hesle`
+          : `Heslo neobsahuje zkratku země}`}
       </div>
     </div>
   )
